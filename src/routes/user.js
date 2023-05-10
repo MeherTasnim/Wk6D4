@@ -1,11 +1,9 @@
 const { Router } = require("express");
 const router = Router();
 const User = require("../models/User.js");
-// 7. Import middleware controller
-const checkPasswordStrength = require("../middleware");
 
-// 8. Add middleware controller to post request and run testing suite to demonstrate that your first two it blocks are now failing
-router.post("/", checkPasswordStrength, async (req, res, next) => {
+
+router.post("/", async (req, res, next) => {
   try {
     const user = await User.create(req.body);
     res.send({ user: user.username });
