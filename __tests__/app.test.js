@@ -9,7 +9,7 @@ describe("User routes", () => {
     it("should create a user and return the username", async () => {
       const userData = {
         username: "testuser",
-        password: "testpassword",
+        password: "Testpassword!",
         email: "testuser@example.com",
       };
       const userMock = { ...userData, _id: "mockedId" };
@@ -26,10 +26,23 @@ describe("User routes", () => {
       const error = new Error("User creation failed");
       User.create.mockRejectedValue(error);
 
-      const response = await request(app).post("/user");
+      const response = await request(app)
+        .post("/user")
+        .send({ password: "Test!" });
 
       expect(response.status).toBe(500);
       expect(response.text).toContain("User creation failed");
+    });
+
+    it("should return an error message if password isn't strong", async () => {
+      const response = await request(app)
+        .post("/user")
+        .send({password: "test" });
+
+      expect(response.status).toBe(500);
+      expect(response.text).toContain(
+        "Password must contain at least one uppercase character and one special character."
+      );
     });
   });
 });

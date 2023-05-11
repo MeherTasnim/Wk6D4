@@ -1,9 +1,9 @@
 const { Router } = require("express");
 const router = Router();
 const User = require("../models/User.js");
+const checkPasswordStrength = require("../middleware");
 
-
-router.post("/", async (req, res, next) => {
+router.post("/", checkPasswordStrength, async (req, res, next) => {
   try {
     const user = await User.create(req.body);
     res.send({ user: user.username });
